@@ -1,0 +1,29 @@
+package it.forexAnalytics;
+
+import static org.junit.Assert.*;
+import it.forex.model.ForexData;
+
+import org.junit.Test;
+
+public class ForexDataTest {
+	@Test
+	public void testConvertDate(){
+		String strTime = "2014-03-21T17:56:13.668154Z";
+		String strTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS";
+		assertTrue(ForexData.parseStringTimeToLong(strTimeFormat, strTime)==1395450441154l);		
+	}
+	@Test
+	public void testConvertDateNullParams(){
+		assertTrue(ForexData.parseStringTimeToLong(null, null)==0);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}

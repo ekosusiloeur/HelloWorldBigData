@@ -79,18 +79,23 @@ public class ForexData {
 		return "ForexData [instrument=" + instrument + ", buyPrice=" + buyPrice
 				+ ", sellPrice=" + sellPrice + ", timeStamp=" + timeStamp + "]";
 	}
+	
+	public static long parseStringTimeToLong(String strFormat, String strTime) {
+		long _result = 0;
+		if (strFormat != null && strTime != null) {
+			try {
+				SimpleDateFormat sdf = new SimpleDateFormat(strFormat);
+				Date date = sdf.parse(strTime);
+				_result = date.getTime();
+			} catch (ParseException e) {
+				logger.error("Error Parsing the date");
+			}
+		}
+		return _result;
+	}
 
 	
 
-	public static void main(String args[]) {
 
-		String strTime = "2014-03-21T17:56:13.668154Z";
-		String strTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS";
-		
-		ForexData f = new ForexData();
-		f.setTimeStamp(System.currentTimeMillis());
-		System.out.println(f.getTimeAsString());
-		System.out.println(f.getTimeAsDate());
-	}
 
 }
