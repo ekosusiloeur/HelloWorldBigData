@@ -93,8 +93,22 @@ public class ForexData {
 		}
 		return _result;
 	}
-
 	
+	public static String parseLongAsDate(long timeStamp){
+		Date date=new Date(timeStamp);
+		String strFormat="dd:MM:yyyy";
+		SimpleDateFormat sdf=new SimpleDateFormat(strFormat);
+		return sdf.format(date);
+	}
+
+	public static void main(String args[]){
+		long lTime=1395450441154l;
+		System.out.println(parseLongAsDate(lTime));
+	}
+	
+	public void parseStringHBaseRowKey(String rowKey){
+		
+	}
 
 
 

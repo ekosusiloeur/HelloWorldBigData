@@ -17,6 +17,11 @@ public class ForexDataTest {
 		assertTrue(ForexData.parseStringTimeToLong(null, null)==0);
 	}
 	
+	@Test
+	public void testConvertLongToDate(){
+		long lTime=1395450441154l;
+		assertTrue(ForexData.parseLongAsDate(lTime).equals("21:03:2014"));
+	}
 	
 	
 	
