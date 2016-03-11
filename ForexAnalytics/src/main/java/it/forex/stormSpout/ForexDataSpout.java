@@ -1,16 +1,13 @@
-package it.forex.app;
+package it.forex.stormSpout;
+
 
 import it.forex.model.ForexData;
-import it.forex.services.ForexService;
-import it.forex.servicesImpl.ForexServiceImpl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -25,40 +22,24 @@ import org.json.simple.JSONValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import backtype.storm.spout.SpoutOutputCollector;
+import backtype.storm.task.TopologyContext;
+import backtype.storm.topology.OutputFieldsDeclarer;
+import backtype.storm.topology.base.BaseRichSpout;
+import backtype.storm.tuple.Fields;
+import backtype.storm.tuple.Values;
 
-public class ForexApp {
-	private static final String AUTHENTICATE_KEY = " ";
-	private static final String USER_ID = " ";
+public class ForexDataSpout extends BaseRichSpout{
+	private static final String AUTHENTICATE_KEY = "";
+	private static final String USER_ID = "";
 	
 	private static final String INSTRUMENT = "EUR_USD";
 	private static final String DOMAIN = "https://stream-fxpractice.oanda.com";;
 	private static final String TIME_FORMAT="yyyy-MM-dd'T'HH:mm:ss.SSSSSS";
-	private static Logger logger = LoggerFactory.getLogger(ForexApp.class);
-
-	private static ForexService service=new ForexServiceImpl();
 	
-	public static void main(String[] args) {
-		System.out.println("ASDASD");
-		//service.scan("EUR_USD_10:03:2016");
-		read();
-		
-	}
-
-	public static long parseStringTimeToLong(String strFormat, String strTime) {
-		long _result = 0;
-		if (strFormat != null && strTime != null) {
-			try {
-				SimpleDateFormat sdf = new SimpleDateFormat(strFormat);
-				Date date = sdf.parse(strTime);
-				_result = date.getTime();
-			} catch (ParseException e) {
-				logger.error("Error Parsing the date");
-			}
-		}
-		return _result;
-	}
-
-	public static ForexData parseLine(String responseLine) {
+	private SpoutOutputCollector _collector;
+	private static Logger logger = LoggerFactory.getLogger(ForexDataSpout.class);
+	private static ForexData parseLine(String responseLine) {
 		ForexData _result = null;
 
 		if (responseLine != null) {
@@ -70,13 +51,14 @@ public class ForexApp {
 					tick = (JSONObject) tick.get("tick");
 					String instrument = tick.get("instrument").toString();
 					String strTime = tick.get("time").toString();
-					long time=parseStringTimeToLong(TIME_FORMAT,strTime);
+					
+					long time=ForexData.parseStringTimeToLong(TIME_FORMAT,strTime);
 					double bid = Double.parseDouble(tick.get("bid")
 							.toString());
 					double ask = Double.parseDouble(tick.get("ask")
 							.toString());
 					_result=new ForexData(instrument,bid,ask,time);
-					service.store(_result);
+					//service.store(_result);
 					
 					System.out.println(_result);
 				}
@@ -89,9 +71,7 @@ public class ForexApp {
 
 		return _result;
 	}
-
-	public static void read() {
-
+	public void nextTuple() {
 		HttpClient httpClient = HttpClientBuilder.create().build();
 		HttpUriRequest httpGet = new HttpGet(DOMAIN + "/v1/prices?accountId="
 				+ USER_ID + "&instruments=" + INSTRUMENT);
@@ -112,7 +92,8 @@ public class ForexApp {
 
 				while ((line = br.readLine()) != null) {
 
-					parseLine(line);
+					ForexData data=parseLine(line);
+					_collector.emit(new Values(data));
 				}
 			} else {
 				
@@ -124,7 +105,16 @@ public class ForexApp {
 			logger.error("EXCEPTION when reading service");
 		}
 		
+	}
 
+	public void open(Map arg0, TopologyContext arg1, SpoutOutputCollector collector) {
+		_collector=collector;
+		
+	}
+
+	public void declareOutputFields(OutputFieldsDeclarer declarer) {
+		 declarer.declare(new Fields("forex-data"));
+		
 	}
 
 }

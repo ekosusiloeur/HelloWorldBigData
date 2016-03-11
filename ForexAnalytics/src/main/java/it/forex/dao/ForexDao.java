@@ -112,7 +112,6 @@ public class ForexDao {
 		scan = scan.setMaxVersions(Integer.MAX_VALUE);
 		try {
 			ResultScanner rs = table.getScanner(scan);
-			// TODO convert from Result to ForexData
 			for (Result result : rs) {
 				List<Cell> cells = result.listCells();
 				
