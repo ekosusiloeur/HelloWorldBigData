@@ -1,5 +1,8 @@
 package it.forex.app;
 
+
+
+import it.forex.bolt.ForexAnalyticBolt;
 import it.forex.bolt.HBaseStoreBolt;
 import it.forex.stormSpout.ForexDataSpout;
 import backtype.storm.Config;
@@ -17,6 +20,7 @@ public class ForexTopology {
 		
 		builder.setSpout("data-spout", dataSpout,1);
 		builder.setBolt("hbase-bolt", new HBaseStoreBolt(),10).shuffleGrouping("data-spout");
+		builder.setBolt("analytics-bolt", new ForexAnalyticBolt(),10).shuffleGrouping("data-spout");
 		// create the default config object
 		Config conf = new Config();
 
