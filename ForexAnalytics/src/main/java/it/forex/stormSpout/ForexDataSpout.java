@@ -33,7 +33,7 @@ public class ForexDataSpout extends BaseRichSpout{
 	private static final String AUTHENTICATE_KEY = "";
 	private static final String USER_ID = "";
 	
-	private static final String INSTRUMENT = "EUR_USD";
+	private static final String INSTRUMENT = "EUR_JPY,EUR_USD";
 	private static final String DOMAIN = "https://stream-fxpractice.oanda.com";;
 	private static final String TIME_FORMAT="yyyy-MM-dd'T'HH:mm:ss.SSSSSS";
 	

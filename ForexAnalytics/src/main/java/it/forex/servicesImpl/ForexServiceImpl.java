@@ -37,13 +37,13 @@ public class ForexServiceImpl implements ForexService{
 
 	public List<ForexData> scanWithinTimeRange(String instrument,
 			long startTime, long endTime) {
-		return null;
+		return dao.scanByInstrumentWithinTimeRange(instrument, startTime, endTime);
 	}
 
 	
 	public List<ForexData> scan(String instrument) {
 	
-		return dao.scanAll(instrument);
+		return dao.scanByInstrument(instrument);
 	}
 
 

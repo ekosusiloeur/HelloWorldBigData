@@ -106,9 +106,7 @@ public class ForexData {
 		System.out.println(parseLongAsDate(lTime));
 	}
 	
-	public void parseStringHBaseRowKey(String rowKey){
-		
-	}
+
 
 
 
