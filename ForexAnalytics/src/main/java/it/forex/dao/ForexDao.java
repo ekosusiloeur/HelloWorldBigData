@@ -36,7 +36,6 @@ import org.apache.hadoop.hbase.filter.FilterList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import akka.util.Collections;
 
 public class ForexDao {
 

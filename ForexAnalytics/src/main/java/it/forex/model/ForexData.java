@@ -101,10 +101,7 @@ public class ForexData {
 		return sdf.format(date);
 	}
 
-	public static void main(String args[]){
-		long lTime=1395450441154l;
-		System.out.println(parseLongAsDate(lTime));
-	}
+
 	
 
 
